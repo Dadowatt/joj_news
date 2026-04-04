@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
-from .models import Utilisateur
+from .models import Utilisateur, Commentaire
 
 
 class Inscription(UserCreationForm):
@@ -32,3 +32,17 @@ class Connexion(AuthenticationForm):
             'email': 'Email',
             'password1': 'Mot de passe', 
         }
+
+ 
+class CommentaireForm(forms.ModelForm):
+    class Meta:
+        model  = Commentaire
+        fields = ["contenu"]
+        widgets = {
+            "contenu": forms.Textarea(attrs={
+                "rows": 4,
+                "placeholder": "Partagez votre avis sur cet article…",
+                "class": "form-control comment-textarea",
+            })
+        }
+        labels = {"contenu": ""}

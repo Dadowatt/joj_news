@@ -126,6 +126,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-LOGIN_URL = 'connexion'
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'connexion'
+
+
+LOGIN_URL= '/comptes/login/'
+LOGOUT_URL= '/comptes/logout/'
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/comptes/login/'

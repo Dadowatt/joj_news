@@ -1,11 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p class="text-danger">hello</p>
-</body>
-</html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Actualités | JOJ Dakar 2026{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'article.css' %}">
+
+{% with hero=articles|first %}
+<section id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+
+  <div class="carousel-indicators">
+    {% for article in hero_articles %}
+      <button type="button"
+              data-bs-target="#heroCarousel"
+              data-bs-slide-to="{{ forloop.counter0 }}"
+              class="{% if forloop.first %}active{% endif %}">
+      </button>
+    {% endfor %}
+  </div>
+
+  <div class="carousel-inner">
+    {% for article in hero_articles %}
+    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+      {% if article.image %}
+        <img src="{{ article.image.url }}" class="d-block w-100 hero-img" style="height: 500px; object-fit: cover; filter: brightness(0.7);">
+      {% endif %}
+
+      <div class="carousel-caption text-start">
+        {% if article.categorie %}
+          <span class="badge bg-warning text-dark mb-2">
+            {{ article.categorie.nom }}
+          </span>
+        {% endif %}
+        <h1 class="fw-bold display-4">{{ article.titre }}</h1>
+        <p class="lead">{{ article.resume|truncatewords:20 }}</p>
+        <a href="{% url 'article_detail' article.pk %}" class="btn btn-warning px-4">
+          Lire l’article →
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</section>
+{% endwith %}
+
+<div class="container py-5">
+    <div class="row">
+        
+        <div class="col-lg-8">
+            <h4 class="text-uppercase fw-bold mb-4 border-bottom pb-2">Dernières Actualités</h4>
+
+            {% if articles %}
+            <div class="row">
+                {% for article in articles %}
+                <div class="col-md-6 mb-4">
+                    <a href="{% url 'article_detail' article.pk %}" class="text-decoration-none text-dark">
+                        <div class="card border-0 h-100 shadow-sm">
+                            <div class="position-relative">
+                                {% if article.image %}
+                                    <img src="{{ article.image.url }}" class="card-img-top" alt="{{ article.titre }}" style="height: 200px; object-fit: cover;">
+                                {% endif %}
+                                <div class="badge bg-warning text-dark position-absolute top-0 start-0 m-3 fw-bold">
+                                    {{ article.categorie.nom }}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold">{{ article.titre }}</h5>
+                                <p class="small text-muted">{{ article.resume|truncatewords:15 }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link text-dark" href="?page={{ page_obj.previous_page_number }}">‹</a></li>
+                    {% endif %}
+                    <li class="page-item active"><a class="page-link bg-dark border-dark text-white" href="#">{{ page_obj.number }}</a></li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link text-dark" href="?page={{ page_obj.next_page_number }}">›</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+            {% endif %}
+
+            <hr class="my-5">
+            <div class="comments-section">
+                <h5 class="fw-bold mb-4">Commentaires ({{ commentaires.count|default:"0" }})</h5>
+                
+                {% for commentaire in commentaires %}
+                <div class="d-flex mb-4">
+                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" 
+                         style="width: 50px; height: 50px; min-width: 50px; font-weight: bold; font-size: 1.2rem;">
+                        {{ commentaire.auteur.username|first|upper }}
+                    </div>
+                    
+                    <div class="flex-grow-1 p-3 bg-light rounded shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 fw-bold">{{ commentaire.auteur.username }}</h6>
+                            <small class="text-muted">{{ commentaire.date_creation|timesince }}</small>
+                        </div>
+                        <p class="mb-0 small text-secondary">{{ commentaire.contenu }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted small">Soyez le premier à commenter !</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 20px;">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">À ne pas manquer</h5>
+                
+                {% for a_side in articles|slice:"1:5" %}
+                <a href="{% url 'article_detail' a_side.pk %}" class="d-flex mb-3 text-decoration-none text-dark align-items-center">
+                    {% if a_side.image %}
+                        <img src="{{ a_side.image.url }}" width="70" height="70" class="me-3 rounded shadow-sm" style="object-fit: cover;">
+                    {% endif %}
+                    <div>
+                        <small class="text-warning fw-bold d-block" style="font-size: 0.7rem;">{{ a_side.categorie.nom }}</small>
+                        <span class="small fw-bold">{{ a_side.titre|truncatechars:45 }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+
+                <div class="card bg-dark text-white p-4 mt-4 border-0 shadow text-center">
+                    <h6 class="fw-bold mb-2">Newsletter JOJ</h6>
+                    <p class="small opacity-75">Recevez les actus de Dakar 2026.</p>
+                    <a href="{% url 'inscription' %}" class="btn btn-warning fw-bold btn-sm rounded-pill">
+                        S'INSCRIRE
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
