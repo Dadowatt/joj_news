@@ -12,17 +12,17 @@
 
     <div class="mb-3">
     {% bootstrap_field form.password show_help=False %}
-    </div>
-    
+    </div> 
     
     <div class="mb-3 d-flex justify-content-between form-check">
     <div><input type="checkbox" class="form-check-input" id="exampleCheck1">
     <label for="">se souvenir de moi</label></div>
         <a href="">Mot de passe oublié?</a>
     </div>
+    
     <p>Pas encore de compte? <a href="{% url 'inscription' %}"> Inscrivez-vous</a></p>
     <div class="mb-3">
-    <button type="submit" class="btn btn-success fw-bold w-100">Submit</button>
+    <button type="submit" class="btn btn-success fw-bold w-100">Connexion</button>
   </div>  
 </form>
 {% endblock %}
