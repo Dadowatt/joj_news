@@ -49,20 +49,20 @@ class ArticleListView(ListView):
     paginate_by = 9  
 
     def get_queryset(self):
-        # Récupère tous les articles avec relations pour éviter les requêtes multiples
+        # récupère tous les articles avec relations pour éviter les requêtes multiples
         return Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         articles = self.get_queryset()
 
-        # Articles pour le carrousel (les 4 premiers)
+        # articles pour le carrousel 
         context["hero_articles"] = articles[:4]
 
-        # Articles pour la grille principale (les suivants)
+        # articles pour la grille principale 
         context["grid_articles"] = articles[4:9]
 
-        # Articles pour la sidebar (les 4 ou 5 derniers articles hors carrousel)
+        # dernier articles pour la sidebar
         context["articles_sidebar"] = articles[1:6]
 
         return context
@@ -95,8 +95,6 @@ class ArticleDetailView(DetailView):
         context["form"] = form
         return self.render_to_response(context)
 
-
-# MODIFIER COMMENTAIRE
 class CommentaireUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Commentaire
     form_class = CommentaireForm
@@ -109,8 +107,6 @@ class CommentaireUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView)
         commentaire = self.get_object()
         return self.request.user == commentaire.auteur
 
-
-# SUPPRIMER COMMENTAIRE
 class CommentaireDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Commentaire
     template_name = "commentaire_delete.html"

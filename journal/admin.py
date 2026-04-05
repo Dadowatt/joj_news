@@ -5,19 +5,11 @@ from .models import Categorie, Article, Commentaire, Utilisateur
 @admin.register(Utilisateur)
 class UtilisateurAdmin(UserAdmin):
     model = Utilisateur
-    #  AFFICHAGE LISTE
     list_display = ('username', 'email', 'is_staff', 'is_active', 'date_joined')
-    
-    #  FILTRES
     list_filter = ('is_staff', 'is_active', 'is_superuser')
-    
-    #  RECHERCHE
     search_fields = ('email', 'username')
-    
-    #  ORDRE
     ordering = ('-date_joined',)
 
-    #  CHAMPS DÉTAILLÉS
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
         
@@ -34,7 +26,6 @@ class UtilisateurAdmin(UserAdmin):
         }),
     )
 
-    #  FORMULAIRE CRÉATION USER
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -42,7 +33,6 @@ class UtilisateurAdmin(UserAdmin):
         }),
     )
 
-# CATEGORIE ADMIN
 
 @admin.register(Categorie)
 class CategorieAdmin(admin.ModelAdmin):
@@ -51,23 +41,13 @@ class CategorieAdmin(admin.ModelAdmin):
     ordering = ('nom',)
 
 
-#  ARTICLE ADMIN
-
 @admin.register(Article)
 class ArticleAdmin(admin.ModelAdmin):
 
-    #  LISTE
     list_display = ('titre', 'categorie', 'auteur', 'date_creation', 'date_modification')
-    
-    #  FILTRES
     list_filter = ('categorie', 'date_creation', 'auteur')
-    
-    #  RECHERCHE
     search_fields = ('titre', 'contenu', 'resume')
-    
-  
 
-    #  ORGANISATION FORMULAIRE
     fieldsets = (
         ('Contenu principal', {
             'fields': ('titre', 'categorie', 'auteur')
@@ -83,34 +63,20 @@ class ArticleAdmin(admin.ModelAdmin):
         }),
     )
 
-    #  CHAMPS READONLY
     readonly_fields = ('date_creation', 'date_modification')
 
-    #  AUTO ATTRIBUTION AUTEUR 
     def save_model(self, request, obj, form, change):
         if not obj.auteur:
             obj.auteur = request.user
         super().save_model(request, obj, form, change)
 
 
-# COMMENTAIRE ADMIN
-
 @admin.register(Commentaire)
 class CommentaireAdmin(admin.ModelAdmin):
-
-    #  LISTE
     list_display = ('auteur', 'article', 'date_creation', 'contenu_court')
-
-    #  FILTRES
     list_filter = ('date_creation', 'article')
-
-    #  RECHERCHE
     search_fields = ('contenu', 'auteur__email', 'article__titre')
-
-    #  ORDER
     ordering = ('-date_creation',)
-
-    #  PREVIEW CONTENU
     def contenu_court(self, obj):
         return obj.contenu[:50] + "..." if len(obj.contenu) > 50 else obj.contenu
     contenu_court.short_description = "Commentaire"
