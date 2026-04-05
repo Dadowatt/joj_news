@@ -128,8 +128,7 @@ STATICFILES_DIRS = [
 ]
 
 
-LOGIN_URL= 'connexion'
-LOGOUT_URL= '/comptes/logout/'
+LOGIN_URL= 'connexion/'
 
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'connexion'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
