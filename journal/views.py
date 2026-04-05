@@ -19,6 +19,8 @@ class Connexion(LoginView):
     form_class = Connexion
     template_name = 'registration/connexion.html'
 
+def index(request):
+    return render(request, 'index.html')
 
 # PAGE D'ACCUEIL (LISTE DES ARTICLES)
 

@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from .models import Utilisateur, Commentaire
 
-
 class Inscription(UserCreationForm):
     nom_complet = forms.CharField(
         label="Nom complet",
@@ -33,20 +32,9 @@ class Inscription(UserCreationForm):
 
 
 class Connexion(AuthenticationForm):
+    username = forms.CharField(label="Nom d'utilisateur")
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
 
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'class': 'form-control'}))
-
-    class Meta:
-        model = Utilisateur
-        fields = ('email', 'password1')
-
-        labels = {
-            'email': 'Email',
-            'password1': 'Mot de passe', 
-        }
-
- 
 class CommentaireForm(forms.ModelForm):
     class Meta:
         model  = Commentaire
