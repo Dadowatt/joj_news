@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import CreateView,ListView, DetailView
+from django.views.generic import CreateView,ListView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from .forms import Inscription, Connexion
@@ -94,4 +95,29 @@ class ArticleDetailView(DetailView):
         context["form"] = form
         return self.render_to_response(context)
 
-   
+
+# MODIFIER COMMENTAIRE
+class CommentaireUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Commentaire
+    form_class = CommentaireForm
+    template_name = "commentaire_edit.html"
+
+    def get_success_url(self):
+        return self.object.article.get_absolute_url()
+
+    def test_func(self):
+        commentaire = self.get_object()
+        return self.request.user == commentaire.auteur
+
+
+# SUPPRIMER COMMENTAIRE
+class CommentaireDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Commentaire
+    template_name = "commentaire_delete.html"
+
+    def get_success_url(self):
+        return self.object.article.get_absolute_url()
+
+    def test_func(self):
+        commentaire = self.get_object()
+        return self.request.user == commentaire.auteur

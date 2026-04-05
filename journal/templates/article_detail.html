@@ -45,49 +45,71 @@
       </div>
 
      {% comment %} commentaires {% endcomment %}
-      <div id="commentaires" class="mt-5">
-        <h3 class="fw-bold mb-4 border-bottom pb-2">Commentaires</h3>
+<div id="commentaires" class="mt-5">
+  <h3 class="fw-bold mb-4 border-bottom pb-2">Commentaires</h3>
 
-        {% for comment in commentaires %}
-        <div class="d-flex mb-4 p-3 bg-light rounded shadow-sm">
-          <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-3" 
-               style="width:50px; height:50px; font-weight:bold;">
-            {{ comment.auteur.username|first|upper }}
-          </div>
-          <div>
-            <div class="fw-bold">{{ comment.auteur.username }} 
-              <small class="text-muted fw-normal ms-2">{{ comment.date_creation|date:"d M Y H:i" }}</small>
-            </div>
-            <p class="mb-0 text-secondary">{{ comment.contenu }}</p>
-          </div>
-        </div>
-        {% empty %}
-        <p class="text-muted fst-italic">Soyez le premier à donner votre avis !</p>
-        {% endfor %}
+  {% for comment in commentaires %}
+  <div class="d-flex mb-4 p-3 bg-light rounded shadow-sm">
 
-        <!-- FORMULAIRE COMMENTAIRE -->
-        {% if user.is_authenticated %}
-        <div class="card p-4 mt-4 border-0 bg-light">
-          <h5 class="fw-bold mb-3">Laisser un commentaire</h5>
-          <form method="post" class="mb-0">
-            {% csrf_token %}
-            {% bootstrap_field form.contenu %}
-            <button type="submit" class="btn btn-warning fw-bold mt-2">Publier</button>
-          </form>
-        </div>
-        {% else %}
-        <div class="alert alert-secondary mt-4">
-          Veuillez vous <a href="{% url 'connexion' %}">connecter</a> pour commenter.
-        </div>
-        {% endif %}
-      </div>
+    {% comment %} Avatar {% endcomment %}
+    <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-3" 
+         style="width:50px; height:50px; font-weight:bold;">
+      {{ comment.auteur.username|first|upper }}
     </div>
 
-    <!-- SIDEBAR -->
+    {% comment %} Contenu {% endcomment %}
+    <div class="w-100">
+      <div class="fw-bold">
+        {{ comment.auteur.username }} 
+        <small class="text-muted fw-normal ms-2">
+          {{ comment.date_creation|date:"d M Y H:i" }}
+        </small>
+      </div>
+
+      <p class="mb-1 text-secondary">{{ comment.contenu }}</p>
+
+      {% comment %} BOUTONS MODIFIER / SUPPRIMER  {% endcomment %}
+      {% if user == comment.auteur %}
+      <div class="mt-2">
+        <a href="{% url 'comment_edit' comment.pk %}" class="btn btn-sm btn-outline-primary me-2">
+          Modifier
+        </a>
+        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-sm btn-outline-danger">
+          Supprimer
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% empty %}
+  <p class="text-muted fst-italic">Soyez le premier à donner votre avis !</p>
+  {% endfor %}
+
+  {% comment %} FORMULAIRE COMMENTAIRE {% endcomment %}
+  {% if user.is_authenticated %}
+  <div class="card p-4 mt-4 border-0 bg-light">
+    <h5 class="fw-bold mb-3">Laisser un commentaire</h5>
+    <form method="post" class="mb-0">
+      {% csrf_token %}
+      {% bootstrap_field form.contenu %}
+      <button type="submit" class="btn btn-warning fw-bold mt-2">Publier</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="alert alert-secondary mt-4">
+    Veuillez vous <a href="{% url 'connexion' %}">connecter</a> pour commenter.
+  </div>
+  {% endif %}
+</div>
+    </div>
+
+    {% comment %} SIDEBAR {% endcomment %}
     <div class="col-lg-4">
       <div class="sticky-top" style="top:20px;">
         
-        <!-- RECHERCHE -->
+        {% comment %} RECHERCHE {% endcomment %}
         <h5 class="fw-bold mb-3 border-bottom pb-2">Rechercher un article</h5>
         <form method="get" action="{% url 'home' %}" class="mb-4">
           <div class="input-group">
@@ -96,7 +118,7 @@
           </div>
         </form>
 
-        <!-- FILTRE CATEGORIES -->
+        {% comment %} FILTRE CATEGORIES {% endcomment %}
         <h5 class="fw-bold mb-3 border-bottom pb-2">Catégories</h5>
         <ul class="list-group mb-4">
           {% for cat in categories %}
@@ -107,7 +129,7 @@
           {% endfor %}
         </ul>
 
-        <!-- AUTRES ARTICLES -->
+        {% comment %} AUTRES ARTICLES {% endcomment %}
         <h5 class="fw-bold mb-3 border-bottom pb-2">Autres articles</h5>
         {% for art in articles_sidebar %}
         <a href="{% url 'article_detail' art.pk %}" class="text-decoration-none text-dark d-flex mb-3 align-items-center">
