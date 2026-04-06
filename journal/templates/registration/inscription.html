@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% load django_bootstrap5 %}
-
 {% block content %}
 <form  method="POST" style="width: 380px;" class="form-control bg-light mt-5 mx-auto p-4 shadow">
   {% csrf_token %}
     <h2 class="text-center">Inscription</h2>
+
     <div class="mb-3">
     {% bootstrap_field form.username show_help=False %}
     </div>
+
+    <div class="mb-3">
+    {% bootstrap_field form.nom_complet %}
+  </div>
+
     <div class="mb-3">
     {% bootstrap_field form.email show_help=False %}
     </div>
@@ -25,6 +30,7 @@
     <label for="">se souvenir de moi</label></div>
         <a href="{% url 'connexion' %}">Connexion</a>
     </div>
+    
     <div class="mb-3">
     <button type="submit" class="btn btn-success fw-bold w-100">Submit</button>
   </div>  

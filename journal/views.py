@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.views.generic import CreateView,ListView, DetailView
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
@@ -10,12 +10,13 @@ from django.contrib import messages
 
 class Inscription(CreateView):
     form_class = Inscription
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('connexion')
     template_name = 'registration/inscription.html'
 
 class Connexion(LoginView):
     form_class = Connexion
     template_name = 'registration/connexion.html'
+    success_url = reverse_lazy('home')
 
 
 # PAGE D'ACCUEIL (LISTE DES ARTICLES)
@@ -87,5 +88,28 @@ class ArticleDetailView(DetailView):
         context["articles_sidebar"] = autres_articles
 
         return context
+    
+    def post(self, request, *args, **kwargs):
+            """
+            Gère l'envoi d'un commentaire.
+            """
+            if not request.user.is_authenticated:
+                messages.error(request, "Vous devez être connecté pour commenter.")
+                return redirect("login")
 
-   
+            article = self.get_object()
+            formulaire = CommentaireForm(request.POST)
+
+            if formulaire.is_valid():
+                nouveau_commentaire = formulaire.save(commit=False)
+                nouveau_commentaire.article = article
+                nouveau_commentaire.auteur = request.user
+                nouveau_commentaire.save()
+
+                messages.success(request, "Commentaire publié avec succès !")
+            else:
+                messages.error(request, "Erreur lors de l'envoi du commentaire.")
+
+            return redirect("article_detail", pk=article.pk)
+
+    
