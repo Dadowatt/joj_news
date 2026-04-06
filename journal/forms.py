@@ -1,9 +1,7 @@
 from django import forms
+
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from .models import Utilisateur, Commentaire
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import Utilisateur
-
 
 class Inscription(UserCreationForm):
     nom_complet = forms.CharField(
@@ -34,23 +32,9 @@ class Inscription(UserCreationForm):
 
 
 class Connexion(AuthenticationForm):
-    # Django utilise 'username' comme identifiant par défaut. 
-    # On le renomme "Email" dans le label pour l'utilisateur.
-    username = forms.EmailField(
-        label="Email",
-        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'votre@email.com'})
-    )
-    # Le champ doit s'appeler 'password' (pas password1)
-    password = forms.CharField(
-        label="Mot de passe",
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '********'})
-    )
+    username = forms.CharField(label="Nom d'utilisateur")
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)
 
-    class Meta:
-        model = Utilisateur
-        fields = ('username', 'password')
-
- 
 class CommentaireForm(forms.ModelForm):
     class Meta:
         model  = Commentaire
@@ -63,5 +47,3 @@ class CommentaireForm(forms.ModelForm):
             })
         }
         labels = {"contenu": ""}
-    username = forms.CharField(label="Nom d'utilisateur")
-    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput)

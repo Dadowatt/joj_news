@@ -1,59 +1,51 @@
 from django.shortcuts import redirect
-from django.views.generic import CreateView,ListView, DetailView
+from django.views.generic import CreateView,ListView, DetailView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from .forms import Inscription, Connexion
-from .models import Article
+from .models import Article, Commentaire
 from .forms import CommentaireForm
 from django.contrib import messages
 
 
-class Inscription(CreateView):
+
+class InscriptionView(CreateView):
     form_class = Inscription
     success_url = reverse_lazy('connexion')
     template_name = 'registration/inscription.html'
 
-class Connexion(LoginView):
+class ConnexionView(LoginView):
     form_class = Connexion
     template_name = 'registration/connexion.html'
+    redirect_authenticated_user = True
     success_url = reverse_lazy('home')
 
-
-# PAGE D'ACCUEIL (LISTE DES ARTICLES)
 
 class ArticleListView(ListView):
     model = Article
     template_name = "index.html"
     context_object_name = "articles"
-    paginate_by = 9
+    paginate_by = 9  
 
     def get_queryset(self):
-        """
-        Récupère tous les articles avec leurs relations
-        pour éviter les requêtes multiples (optimisation).
-        """
-        articles = Article.objects.select_related("categorie", "auteur").all()
-        return articles
+        # récupère tous les articles avec relations pour éviter les requêtes multiples
+        return Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
 
     def get_context_data(self, **kwargs):
-        """
-        Ajoute des données supplémentaires pour le template.
-        """
         context = super().get_context_data(**kwargs)
-
         articles = self.get_queryset()
 
-        # Articles pour le carrousel (les 4 premiers)
+        # articles pour le carrousel 
         context["hero_articles"] = articles[:4]
 
-        # Articles pour la grille (les suivants)
+        # articles pour la grille principale 
         context["grid_articles"] = articles[4:9]
 
+        # dernier articles pour la sidebar
+        context["articles_sidebar"] = articles[1:6]
+
         return context
-
-
-
-# PAGE DÉTAIL D’UN ARTICLE + COMMENTAIRES
 
 class ArticleDetailView(DetailView):
     model = Article
@@ -61,32 +53,13 @@ class ArticleDetailView(DetailView):
     context_object_name = "article"
 
     def get_context_data(self, **kwargs):
-        """
-        Envoie toutes les données nécessaires à la page détail.
-        """
         context = super().get_context_data(**kwargs)
-
         article = self.get_object()
+        context["commentaires"] = article.commentaires.select_related("auteur").all()
+        context["form"] = CommentaireForm()
 
-        # Tous les commentaires liés à cet article
-        commentaires = article.commentaires.select_related("auteur").all()
-
-        # Formulaire de commentaire
-        formulaire_commentaire = CommentaireForm()
-
-        # Articles pour la sidebar 
-        autres_articles = (
-            Article.objects
-            .exclude(pk=article.pk)
-            .select_related("categorie")
-            .order_by("-date_creation")[:5]
-        )
-
-        # Injection dans le template
-        context["commentaires"] = commentaires
-        context["form"] = formulaire_commentaire
-        context["articles_sidebar"] = autres_articles
-
+        # Articles pour le sidebar
+        context["articles_sidebar"] = Article.objects.exclude(pk=article.pk).order_by("-date_creation")[:5]
         return context
     
     def post(self, request, *args, **kwargs):
@@ -97,19 +70,38 @@ class ArticleDetailView(DetailView):
                 messages.error(request, "Vous devez être connecté pour commenter.")
                 return redirect("login")
 
-            article = self.get_object()
-            formulaire = CommentaireForm(request.POST)
-
-            if formulaire.is_valid():
-                nouveau_commentaire = formulaire.save(commit=False)
-                nouveau_commentaire.article = article
-                nouveau_commentaire.auteur = request.user
-                nouveau_commentaire.save()
-
-                messages.success(request, "Commentaire publié avec succès !")
-            else:
-                messages.error(request, "Erreur lors de l'envoi du commentaire.")
-
+    def post(self, request, *args, **kwargs):
+        article = self.get_object()
+        form = CommentaireForm(request.POST)
+        if form.is_valid():
+            commentaire = form.save(commit=False)
+            commentaire.article = article
+            commentaire.auteur = request.user
+            commentaire.save()
             return redirect("article_detail", pk=article.pk)
+        context = self.get_context_data()
+        context["form"] = form
+        return self.render_to_response(context)
 
-    
+class CommentaireUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Commentaire
+    form_class = CommentaireForm
+    template_name = "commentaire_edit.html"
+
+    def get_success_url(self):
+        return self.object.article.get_absolute_url()
+
+    def test_func(self):
+        commentaire = self.get_object()
+        return self.request.user == commentaire.auteur
+
+class CommentaireDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Commentaire
+    template_name = "commentaire_delete.html"
+
+    def get_success_url(self):
+        return self.object.article.get_absolute_url()
+
+    def test_func(self):
+        commentaire = self.get_object()
+        return self.request.user == commentaire.auteur

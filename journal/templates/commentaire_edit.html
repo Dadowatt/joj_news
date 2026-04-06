@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Modifier commentaire{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width:600px;">
+  
+  <div class="card shadow border-0">
+    <div class="card-body">
+      
+      <h3 class="fw-bold mb-4 text-center">Modifier votre commentaire</h3>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {% bootstrap_field form.contenu %}
+
+        <div class="d-flex justify-content-between mt-4">
+          <a href="{{ object.article.get_absolute_url }}" class="btn btn-secondary">
+            Annuler
+          </a>
+          <button type="submit" class="btn btn-primary fw-bold">
+            Enregistrer
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

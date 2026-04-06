@@ -5,8 +5,6 @@ from django.conf import settings
 
 class Utilisateur(AbstractUser):
     email = models.EmailField(unique=True)
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
 
 class Categorie(models.Model):
@@ -41,6 +39,7 @@ class Commentaire(models.Model):
     auteur        = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="commentaires")
     contenu       = models.TextField(verbose_name="Votre commentaire")
     date_creation = models.DateTimeField(auto_now_add=True)
+    lu = models.BooleanField(default=False)
  
     class Meta:
         ordering = ["date_creation"]

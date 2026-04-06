@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
+{% load django_bootstrap5 %}
 
 {% block title %}{{ article.titre }}{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'article.css' %}">
 
-<section class="detail-hero" style="position: relative; color: white; background: #000;">
+{% comment %} hero {% endcomment %}
+<section class="detail-hero position-relative text-white" style="background:#000;">
   {% if article.image %}
-    <img src="{{ article.image.url }}" alt="{{ article.titre }}" style="width: 100%; height: 400px; object-fit: cover; opacity: 0.6;">
+    <img src="{{ article.image.url }}" alt="{{ article.titre }}" class="w-100" style="height: 400px; object-fit: cover; opacity: 0.6;">
   {% else %}
-    <div style="width:100%; height:400px; background: #1a1a1a; display:flex; align-items:center; justify-content:center; font-size:4rem;">JOJ 2026</div>
+    <div class="d-flex align-items-center justify-content-center w-100" style="height:400px; background:#1a1a1a; font-size:4rem;">
+      JOJ 2026
+    </div>
   {% endif %}
 
-  <div class="container" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);">
+  <div class="container position-absolute bottom-0 start-50 translate-middle-x mb-3">
     {% if article.categorie %}
       <span class="badge bg-warning text-dark mb-2">{{ article.categorie.nom }}</span>
     {% endif %}
@@ -28,7 +32,7 @@
 
 <div class="container mt-5">
   <div class="row">
-    
+   {% comment %} article pricipal {% endcomment %}
     <div class="col-lg-8">
       {% if article.resume %}
       <p class="lead border-start border-warning border-4 ps-3 mb-4 text-muted">
@@ -40,58 +44,106 @@
         {{ article.contenu|linebreaks }}
       </div>
 
-      <div id="commentaires" class="mt-5">
-        <h3 class="fw-bold mb-4 border-bottom pb-2">Commentaires</h3>
+     {% comment %} commentaires {% endcomment %}
+<div id="commentaires" class="mt-5">
+  <h3 class="fw-bold mb-4 border-bottom pb-2">Commentaires</h3>
 
-        {% for comment in commentaires %}
-        <div class="d-flex mb-4 p-3 bg-light rounded shadow-sm">
-          <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-3" 
-               style="width: 50px; height: 50px; min-width: 50px; font-weight: bold;">
-            {{ comment.auteur.username|first|upper }}
-          </div>
-          <div>
-            <div class="fw-bold">{{ comment.auteur.username }} <small class="text-muted fw-normal ms-2">{{ comment.date_creation|date:"d M Y" }}</small></div>
-            <p class="mb-0 text-secondary">{{ comment.contenu }}</p>
-          </div>
-        </div>
-        {% empty %}
-        <p class="text-muted italic">Soyez le premier à donner votre avis !</p>
-        {% endfor %}
+  {% comment %} {% for comment in commentaires %} {% endcomment %}
+  <div class="d-flex mb-4 p-3 bg-light rounded shadow-sm">
 
-        {% if user.is_authenticated %}
-          <div class="card p-4 mt-4 border-0 bg-light">
-            <h5 class="fw-bold mb-3">Laisser un message</h5>
-            <form method="post">
-              {% csrf_token %}
-              {{ form.as_p }}
-              <button type="submit" class="btn btn-warning fw-bold">Publier</button>
-            </form>
-          </div>
-        {% else %}
-          <div class="alert alert-secondary mt-4">
-            Veuillez vous <a href="{% url 'connexion' %}">connecter</a> pour commenter.
-          </div>
-        {% endif %}
-      </div>
+    {% comment %} Avatar {% endcomment %}
+    <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center me-3" 
+         style="width:50px; height:50px; font-weight:bold;">
+      {{ comment.auteur.username|first|upper }}
     </div>
 
+    {% comment %} Contenu {% endcomment %}
+    <div class="w-100">
+      <div class="fw-bold">
+        {{ comment.auteur.username }} 
+        <small class="text-muted fw-normal ms-2">
+          {{ comment.date_creation|date:"d M Y H:i" }}
+        </small>
+      </div>
+
+      <p class="mb-1 text-secondary">{{ comment.contenu }}</p>
+
+      {% comment %} BOUTONS MODIFIER / SUPPRIMER  {% endcomment %}
+      {% if user == comment.auteur %}
+      <div class="mt-2">
+        <a href="{% url 'comment_edit' comment.pk %}" class="btn btn-sm btn-outline-primary me-2">
+          Modifier
+        </a>
+        <a href="{% url 'comment_delete' comment.pk %}" class="btn btn-sm btn-outline-danger">
+          Supprimer
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  {% comment %} {% empty %} {% endcomment %}
+  <p class="text-muted fst-italic">Soyez le premier à donner votre avis !</p>
+  {% comment %} {% endfor %} {% endcomment %}
+
+  {% comment %} FORMULAIRE COMMENTAIRE {% endcomment %}
+  {% if user.is_authenticated %}
+  <div class="card p-4 mt-4 border-0 bg-light">
+    <h5 class="fw-bold mb-3">Laisser un commentaire</h5>
+    <form method="post" class="mb-0">
+      {% csrf_token %}
+      {% bootstrap_field form.contenu %}
+      <button type="submit" class="btn btn-warning fw-bold mt-2">Publier</button>
+    </form>
+  </div>
+  {% else %}
+  <div class="alert alert-secondary mt-4">
+    Veuillez vous <a href="{% url 'connexion' %}">connecter</a> pour commenter.
+  </div>
+  {% endif %}
+</div>
+    </div>
+
+    {% comment %} SIDEBAR {% endcomment %}
     <div class="col-lg-4">
-      <div class="sticky-top" style="top: 20px;">
+      <div class="sticky-top" style="top:20px;">
+        
+        {% comment %} RECHERCHE {% endcomment %}
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Rechercher un article</h5>
+        <form method="get" action="{% url 'home' %}" class="mb-4">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Titre ou mot-clé..." value="{{ request.GET.q }}">
+            <button class="btn btn-warning" type="submit">Rechercher</button>
+          </div>
+        </form>
+
+        {% comment %} FILTRE CATEGORIES {% endcomment %}
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Catégories</h5>
+        <ul class="list-group mb-4">
+          {% for cat in categories %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <a href="{% url 'home' %}?categorie={{ cat.id }}" class="text-decoration-none text-dark">{{ cat.nom }}</a>
+            <span class="badge bg-warning rounded-pill">{{ cat.article_set.count }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+
+        {% comment %} AUTRES ARTICLES {% endcomment %}
         <h5 class="fw-bold mb-3 border-bottom pb-2">Autres articles</h5>
         {% for art in articles_sidebar %}
         <a href="{% url 'article_detail' art.pk %}" class="text-decoration-none text-dark d-flex mb-3 align-items-center">
-            {% if art.image %}
-                <img src="{{ art.image.url }}" width="80" height="60" class="rounded me-3" style="object-fit: cover;">
-            {% endif %}
-            <div>
-                <small class="text-warning fw-bold d-block">{{ art.categorie.nom }}</small>
-                <span class="fw-bold small">{{ art.titre|truncatechars:50 }}</span>
-            </div>
+          {% if art.image %}
+            <img src="{{ art.image.url }}" width="80" height="60" class="rounded me-3" style="object-fit: cover;">
+          {% endif %}
+          <div>
+            <small class="text-warning fw-bold d-block">{{ art.categorie.nom }}</small>
+            <span class="fw-bold small">{{ art.titre|truncatechars:50 }}</span>
+          </div>
         </a>
         {% endfor %}
       </div>
     </div>
-
   </div>
 </div>
 {% endblock %}
