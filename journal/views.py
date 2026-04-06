@@ -56,7 +56,10 @@ class ArticleDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         article = self.get_object()
         context["commentaires"] = article.commentaires.select_related("auteur").all()
-        context["form"] = CommentaireForm()
+        form = CommentaireForm()
+        if self.request.GET.get("comment_posted") == "1":
+            form.fields["contenu"].widget.attrs["placeholder"] = ""
+        context["form"] = form
 
         # Articles pour le sidebar
         context["articles_sidebar"] = Article.objects.exclude(pk=article.pk).order_by("-date_creation")[:5]
@@ -78,7 +81,7 @@ class ArticleDetailView(DetailView):
             commentaire.article = article
             commentaire.auteur = request.user
             commentaire.save()
-            return redirect("article_detail", pk=article.pk)
+            return redirect(f"/article/{article.pk}/?comment_posted=1")
         context = self.get_context_data()
         context["form"] = form
         return self.render_to_response(context)
