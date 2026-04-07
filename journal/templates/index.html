@@ -4,7 +4,7 @@
 {% block content %}
 
 {% comment %} carousel des articles {% endcomment %}
-<section id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+<section id="heroCarousel" class="carousel slide my-5 banier" data-bs-ride="carousel">
   <div class="carousel-indicators">
     {% for article in hero_articles %}
       <button type="button"
@@ -97,33 +97,20 @@
       <p class="text-muted">Aucun article disponible pour le moment.</p>
       {% endif %}
 
-      {% comment %} section commentaire recent {% endcomment %}
-      <hr class="my-5">
-      <div class="comments-section">
-        <h5 class="fw-bold mb-4">Commentaires récents</h5>
-        {% for commentaire in commentaires %}
-        <div class="d-flex mb-4">
-          <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3"
-               style="width:50px; height:50px; font-weight:bold; font-size:1.2rem;">
-            {{ commentaire.auteur.username|first|upper }}
-          </div>
-          <div class="flex-grow-1 p-3 bg-light rounded shadow-sm">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <h6 class="mb-0 fw-bold">{{ commentaire.auteur.username }}</h6>
-              <small class="text-muted">{{ commentaire.date_creation|timesince }} ago</small>
-            </div>
-            <p class="mb-0 small text-secondary">{{ commentaire.contenu }}</p>
-          </div>
-        </div>
-        {% empty %}
-        <p class="text-muted small">Aucun commentaire pour le moment.</p>
-        {% endfor %}
-      </div>
+      
     </div>
 
     {% comment %} sidebar {% endcomment %}
     <div class="col-lg-4">
       <div class="sticky-top" style="top:20px;">
+        {% comment %} RECHERCHE {% endcomment %}
+        <h5 class="fw-bold mb-3 border-bottom pb-2">Rechercher un article</h5>
+        <form method="get" action="{% url 'home' %}" class="mb-4">
+          <div class="input-group">
+            <input type="text" name="q" class="form-control" placeholder="Rechercher par categorie..." value="{{ request.GET.q }}">
+            <button class="btn btn-warning" type="submit">Rechercher</button>
+          </div>
+        </form>
         <h5 class="fw-bold border-bottom pb-2 mb-3">À ne pas manquer</h5>
 
         {% for art in articles|slice:"0:5" %}
@@ -138,7 +125,7 @@
         </a>
         {% endfor %}
 
-        <div class="card bg-dark text-white p-4 mt-4 border-0 shadow text-center">
+        <div class="card bg-success text-white p-4 mt-4 border-0 shadow text-center">
           <h6 class="fw-bold mb-2">Newsletter JOJ</h6>
           <p class="small opacity-75">Recevez les actus de Dakar 2026.</p>
           <a href="{% url 'inscription' %}" class="btn btn-warning fw-bold btn-sm rounded-pill">S'INSCRIRE</a>

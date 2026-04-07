@@ -6,8 +6,7 @@ from django.urls import reverse_lazy
 from .forms import Inscription, Connexion
 from .models import Article, Commentaire
 from .forms import CommentaireForm
-from django.contrib import messages
-
+from django.db.models import Q
 
 
 class Inscription(CreateView):
@@ -46,22 +45,31 @@ class ArticleListView(ListView):
     model = Article
     template_name = "index.html"
     context_object_name = "articles"
-    paginate_by = 9  
-
+    paginate_by = 4  
+    
     def get_queryset(self):
-        # récupère tous les articles avec relations pour éviter les requêtes multiples
-        return Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
+        queryset = Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
+
+        query = self.request.GET.get("q")
+
+        if query:
+            queryset = queryset.filter(
+                Q(categorie__nom__icontains=query)
+            )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         articles = self.get_queryset()
 
+        context["query"] = self.request.GET.get("q")
+
         context["hero_articles"] = articles[:4]
-        context["grid_articles"] = articles[4:9] if articles.count() > 4 else articles[:4]
+        context["grid_articles"] = articles[5:9] if articles.count() > 4 else articles[:4]
 
         # dernier articles pour la sidebar
         context["articles_sidebar"] = articles[1:6]
-
         return context
 
 class ArticleDetailView(DetailView):

@@ -5,37 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}JOJ Dakar 2026{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     <!-- Bootstrap 5 & Google Fonts -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://googleapis.com" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-    <style>
-        :root {
-            --joj-red: #d9232e;
-            --joj-gold: #ffb800;
-            --joj-dark: #1a1a1a;
-        }
-        body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; }
-        h1, h2, h3, .oswald { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
-
-        /* NAVBAR STYLE DAKAR 2026 */
-        .navbar-joj { background-color: var(--joj-dark); padding: 0.5rem 2rem; border-bottom: 3px solid var(--joj-gold); }
-        .nav-link { color: white !important; text-transform: uppercase; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
-        .nav-link:hover { color: var(--joj-gold) !important; }
-        .nav-link.active { border-bottom: 2px solid var(--joj-red); }
-        
-        .btn-live { background-color: var(--joj-red); color: white; border-radius: 20px; padding: 2px 15px; font-size: 0.8rem; font-weight: bold; }
-        .brand-logo img { height: 45px; }
-    </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-joj sticky-top">
+<nav class="navbar nav-header navbar-expand-lg navbar-joj fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand brand-logo" href="{% url 'home' %}">
-            <img src="{% static 'images/image.png' %}" alt="JOJ 2026">
+            <img src="{% static 'images/logo_red.png' %}" alt="JOJ 2026">
         </a>
         
         <button class="navbar-toggler btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -53,21 +36,71 @@
                 {% if user.is_authenticated %}
                     <form method="post" action="{% url 'logout' %}">
                     {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger ms-2">
+                        <button type="submit" class="btn btn-danger ms-2">
                             Déconnexion
                         </button>
                     </form>
                     <a href="#" class="text-white text-decoration-none small"><i class="bi bi-person-circle"></i> {{ user.username }}</a>
                     <a href="{% url 'home' %}" class="btn btn-sm btn-outline-light">Quitter</a>
                 {% else %}
-                    <a href="{% url 'connexion' %}" class="text-white text-decoration-none small">Connexion</a>
+                    <a href="{% url 'connexion' %}" class="text-white rounded-pill btn btn-success py-1 px-3 fw-bold text-decoration-none small">Connexion</a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
+<p class="marge"></p>
 
 {% block content %}{% endblock %}
+
+<!-- FOOTER JOJ DAKAR 2026 -->
+<footer class="footer-joj text-white pt-5 pb-3 mt-5">
+  <div class="container">
+    <div class="row align-items-start">
+
+      <!-- LOGO / TITRE -->
+      <div class="col-lg-4 mb-4">
+        <h2 class="fw-bold">JOJ Dakar 2026</h2>
+        <p>Jeux Olympiques de la Jeunesse au cœur du Sénégal</p>
+        <small>🇸🇳 Dakar • Diamniadio • Saly</small>
+      </div>
+
+      <!-- LIENS -->
+      <div class="col-lg-4 mb-4">
+        <ul class="list-unstyled">
+          <li><a href="#" class="footer-link">Programme des compétitions</a></li>
+          <li><a href="#" class="footer-link">Se loger</a></li>
+          <li><a href="#" class="footer-link">Devenir bénévole</a></li>
+          <li><a href="#" class="footer-link">Devenir partenaire</a></li>
+          <li><a href="#" class="footer-link">Contacter l’organisation</a></li>
+        </ul>
+      </div>
+
+      <!-- CONTACT + RÉSEAUX -->
+      <div class="col-lg-4 mb-4 text-lg-end">
+        <p class="fw-bold">contact@joj-dakar2026.sn</p>
+
+        <div class="d-flex gap-3 justify-content-lg-end mt-3">
+          <a href="#" class="social-box facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-box instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-box tiktok"><i class="bi bi-tiktok"></i></a>
+          <a href="#" class="social-box youtube"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BAS FOOTER -->
+    <div class="d-flex justify-content-between mt-4 pt-3 border-top small">
+      <p class="mb-0">© 2026 JOJ Dakar – Tous droits réservés</p>
+      <div>
+        <a href="#" class="footer-link me-3">Mentions légales</a>
+        <a href="#" class="footer-link me-3">Politique de confidentialité</a>
+        <a href="#" class="footer-link">Nous contacter</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

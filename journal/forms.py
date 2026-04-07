@@ -7,7 +7,6 @@ class Inscription(UserCreationForm):
     nom_complet = forms.CharField(
         label="Nom complet",
         required=True,
-        help_text="Entrez votre prénom et nom"
     )
     email = forms.EmailField(label="Email", required=True)
 
@@ -17,6 +16,7 @@ class Inscription(UserCreationForm):
 
         labels = {
             'username': 'Nom d\'utilisateur',
+
             'password1': 'Mot de passe',
             'password2': 'Confirmation du mot de passe',
         }

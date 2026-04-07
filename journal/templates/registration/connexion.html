@@ -1,16 +1,40 @@
-{% extends "base.html" %}
+{% load static %}
 {% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-{% block content %}
+    <!-- Bootstrap 5 & Google Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+    .connexion{
+    font-family:fantasy;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+   /* backdrop-filter: blur(5px);*/
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+  </style>
+</head>
+<body class="login">
+
  <div class="retour"> 
-    <p class="register-retour">
-        <a href="{% url 'home' %}">← Retour à l'accueil</a>
+    <p class="register-retour my-3 mx-3">
+        <a href="{% url 'home' %}" class="text-warning fs-6">← Retour à l'accueil</a>
     </p>
   </div>
   
-<form  method="POST" style="width: 380px;" class="form-control bg-light mt-5 mx-auto p-4 shadow">
+<form  method="POST" style="width: 380px;" class="form-control connexion mt-5 mx-auto p-4">
   {% csrf_token %}
-    <h2 class="text-center">Connexion</h2>
+    <h2 class="text-center text-success">Connexion</h2>
     
     <div class="mb-3">
     {% bootstrap_field form.username show_help=False %}
@@ -23,12 +47,14 @@
     <div class="mb-3 d-flex justify-content-between form-check">
     <div><input type="checkbox" class="form-check-input" id="exampleCheck1">
     <label for="">se souvenir de moi</label></div>
-        <a href="">Mot de passe oublié?</a>
+        <a href="" class="text-warning fw-bold">Mot de passe oublié?</a>
     </div>
     
-    <p>Pas encore de compte? <a href="{% url 'inscription' %}"> Inscrivez-vous</a></p>
+    <p>Pas encore de compte? <a href="{% url 'inscription' %}" class="text-warning"> Inscrivez-vous</a></p>
     <div class="mb-3">
     <button type="submit" class="btn btn-success fw-bold w-100">Connexion</button>
   </div>  
 </form>
-{% endblock %}
+
+</body>
+</html>

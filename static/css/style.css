@@ -1,0 +1,80 @@
+:root {
+            --joj-red: #d9232e;
+            --joj-gold: #ffb800;
+        }
+        body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; }
+        h1, h2, h3, .oswald { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
+
+        /* NAVBAR STYLE DAKAR 2026 */
+        .navbar-joj {
+            background-color: var(--joj-dark);
+            padding: 0.5rem 2rem;
+            border-bottom: 3px solid var(--joj-gold);
+        }
+        .nav-link { color: white !important; text-transform: uppercase; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
+        .nav-link:hover { color: var(--joj-red) !important; }
+        .nav-link.active { border-bottom: 2px solid var(--joj-red); }
+        
+        .btn-live { background-color: var(--joj-red); color: white; border-radius: 20px; padding: 2px 15px; font-size: 0.8rem; font-weight: bold; }
+        .brand-logo img { height: 45px; }
+
+.nav-header{
+     background: linear-gradient(135deg, rgb(62, 136, 62), #FFD700, #FF8C00, #C1121F);
+    z-index: 5;
+}
+.marge{
+    margin-top: 74px;
+}
+
+.login{
+    background: linear-gradient(rgba(0, 0, 0, 0.45),rgba(0, 0, 0, 0.45)), url('../images/bg-image.webp') center/ cover, no-repeat;
+}
+.connexion, .inscription{
+    font-family:fantasy;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.footer-joj {
+  background: linear-gradient(135deg,rgb(62, 136, 62), #FFD700, #FF8C00, #C1121F);
+  color: white;
+}
+
+.footer-link {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+.footer-link:hover {
+  color: #fff;
+  transform: translateX(5px);
+}
+
+/* Réseaux sociaux */
+.social-box {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: white;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.social-box:hover {
+  transform: scale(1.1);
+}
+
+.facebook { background: #3b5998; }
+.instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);}
+.tiktok { background: #222; }
+.youtube { background: #ff0000; }

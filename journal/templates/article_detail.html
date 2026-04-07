@@ -109,17 +109,9 @@
     <div class="col-lg-4">
       <div class="sticky-top" style="top:20px;">
         
-        {% comment %} RECHERCHE {% endcomment %}
-        <h5 class="fw-bold mb-3 border-bottom pb-2">Rechercher un article</h5>
-        <form method="get" action="{% url 'home' %}" class="mb-4">
-          <div class="input-group">
-            <input type="text" name="q" class="form-control" placeholder="Titre ou mot-clé..." value="{{ request.GET.q }}">
-            <button class="btn btn-warning" type="submit">Rechercher</button>
-          </div>
-        </form>
+        
 
         {% comment %} FILTRE CATEGORIES {% endcomment %}
-        <h5 class="fw-bold mb-3 border-bottom pb-2">Catégories</h5>
         <ul class="list-group mb-4">
           {% for cat in categories %}
           <li class="list-group-item d-flex justify-content-between align-items-center">
