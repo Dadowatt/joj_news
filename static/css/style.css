@@ -19,31 +19,39 @@
         .brand-logo img { height: 45px; }
 
 .nav-header{
-     background: linear-gradient(135deg, rgb(62, 136, 62), #FFD700, #FF8C00, #C1121F);
-    z-index: 5;
+  background: linear-gradient(135deg, rgb(62, 136, 62), #FFD700, #FF8C00, #C1121F);
+  z-index: 2;
 }
 .marge{
     margin-top: 74px;
 }
 
 .login{
-    background: linear-gradient(rgba(0, 0, 0, 0.45),rgba(0, 0, 0, 0.45)), url('../images/bg-image.webp') center/ cover, no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.35)), url('../images/bg-image.webp') center/ cover, no-repeat;
 }
 .connexion, .inscription{
-    font-family:fantasy;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  font-family: fantasy;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.connexion{
+  width: 380px;
+}
+:is(.inscription, .connexion) input{
+  background: transparent;
 }
 
 .footer-joj {
   background: linear-gradient(135deg,rgb(62, 136, 62), #FFD700, #FF8C00, #C1121F);
   color: white;
 }
-
+.pas-compte {
+  color:#ff0000;
+}
 .footer-link {
   color: rgba(255,255,255,0.85);
   text-decoration: none;
