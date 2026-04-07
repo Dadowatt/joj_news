@@ -56,11 +56,8 @@ class ArticleListView(ListView):
         context = super().get_context_data(**kwargs)
         articles = self.get_queryset()
 
-        # articles pour le carrousel 
         context["hero_articles"] = articles[:4]
-
-        # articles pour la grille principale 
-        context["grid_articles"] = articles[4:9]
+        context["grid_articles"] = articles[4:9] if articles.count() > 4 else articles[:4]
 
         # dernier articles pour la sidebar
         context["articles_sidebar"] = articles[1:6]
