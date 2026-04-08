@@ -45,7 +45,7 @@ class ArticleListView(ListView):
     model = Article
     template_name = "index.html"
     context_object_name = "articles"
-    paginate_by = 4  
+    paginate_by = 10  
     
     def get_queryset(self):
         queryset = Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
@@ -66,7 +66,7 @@ class ArticleListView(ListView):
         context["query"] = self.request.GET.get("q")
 
         context["hero_articles"] = articles[:4]
-        context["grid_articles"] = articles[5:9] if articles.count() > 4 else articles[:4]
+        context["grid_articles"] = articles[5:10] if articles.count() > 4 else articles[:4]
 
         # dernier articles pour la sidebar
         context["articles_sidebar"] = articles[1:6]
