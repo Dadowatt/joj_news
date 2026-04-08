@@ -86,4 +86,3 @@ class CommentaireForm(forms.ModelForm):
             })
         }
         labels = {"contenu": ""}
-

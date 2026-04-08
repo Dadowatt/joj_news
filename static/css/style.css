@@ -1,11 +1,16 @@
 :root {
             --joj-red: #d9232e;
             --joj-gold: #ffb800;
+<<<<<<< HEAD
+=======
+            --joj-dark: #1a1a1a;
+>>>>>>> ed0124863476cdb3733704f752dcbdb97ee1559c
         }
         body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; }
         h1, h2, h3, .oswald { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
 
         /* NAVBAR STYLE DAKAR 2026 */
+<<<<<<< HEAD
         .navbar-joj {
             background-color: var(--joj-dark);
             padding: 0.5rem 2rem;
@@ -86,3 +91,12 @@
 .instagram { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);}
 .tiktok { background: #222; }
 .youtube { background: #ff0000; }
+=======
+        .navbar-joj { background-color: var(--joj-dark); padding: 0.5rem 2rem; border-bottom: 3px solid var(--joj-gold); }
+        .nav-link { color: white !important; text-transform: uppercase; font-weight: 600; font-size: 0.9rem; letter-spacing: 1px; }
+        .nav-link:hover { color: var(--joj-gold) !important; }
+        .nav-link.active { border-bottom: 2px solid var(--joj-red); }
+        
+        .btn-live { background-color: var(--joj-red); color: white; border-radius: 20px; padding: 2px 15px; font-size: 0.8rem; font-weight: bold; }
+        .brand-logo img { height: 45px; }
+>>>>>>> ed0124863476cdb3733704f752dcbdb97ee1559c

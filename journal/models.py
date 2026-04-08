@@ -20,7 +20,7 @@ class Article(models.Model):
     resume      = models.CharField(max_length=400, blank=True, help_text="Court résumé affiché dans les cartes")
     image       = models.ImageField(upload_to="articles/", blank=True, null=True)
     auteur      = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
-    date_creation = models.DateTimeField(auto_now=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
     date_modification = models.DateTimeField(auto_now=True)
  
     class Meta:

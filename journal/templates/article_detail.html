@@ -45,7 +45,7 @@
 <div id="commentaires" class="mt-5">
   <h3 class="fw-bold mb-4 border-bottom pb-2">Commentaires</h3>
 
-  {% for comment in commentaires %}
+  {% comment %} {% for comment in commentaires %} {% endcomment %}
   <div class="d-flex mb-4 p-3 bg-light rounded shadow-sm">
 
     {% comment %} Avatar {% endcomment %}
@@ -80,9 +80,9 @@
     </div>
   </div>
 
-  {% empty %}
+  {% comment %} {% empty %} {% endcomment %}
   <p class="text-muted fst-italic">Soyez le premier à donner votre avis !</p>
-  {% endfor %}
+  {% comment %} {% endfor %} {% endcomment %}
 
   {% comment %} FORMULAIRE COMMENTAIRE {% endcomment %}
   {% if user.is_authenticated %}

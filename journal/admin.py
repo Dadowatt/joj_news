@@ -2,13 +2,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import Categorie, Article, Commentaire, Utilisateur
 
-@admin.register(Utilisateur)
+# @admin.register(Utilisateur)
 class UtilisateurAdmin(UserAdmin):
     model = Utilisateur
     list_display = ('username', 'email', 'is_staff', 'is_active', 'date_joined')
     list_filter = ('is_staff', 'is_active', 'is_superuser')
     search_fields = ('email', 'username')
-    ordering = ('-date_joined',)
+    ordering = ('-date_joined','username')
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
