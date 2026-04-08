@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import CreateView,ListView, DetailView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
@@ -9,17 +9,37 @@ from .forms import CommentaireForm
 from django.db.models import Q
 
 
-class InscriptionView(CreateView):
+class Inscription(CreateView):
     form_class = Inscription
     success_url = reverse_lazy('connexion')
     template_name = 'registration/inscription.html'
 
-class ConnexionView(LoginView):
+class Connexion(LoginView):
     form_class = Connexion
     template_name = 'registration/connexion.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('home')
 
+def index(request):
+    # Récupérer tous les articles avec les relations nécessaires
+    articles = Article.objects.select_related("categorie", "auteur").all().order_by('-date_creation')
+
+    # Carrousel des 4 premiers articles
+    hero_articles = articles[:4]
+
+    # Grille principale pour les articles suivants
+    grid_articles = articles[4:9]
+
+    # Commentaires récents : les 5 derniers commentaires
+    commentaires = Commentaire.objects.select_related("auteur", "article").order_by('-date_creation')[:5]
+
+    context = {
+        'articles': articles,           
+        'hero_articles': hero_articles, 
+        'grid_articles': grid_articles, 
+        'commentaires': commentaires,   
+    }
+    return render(request, 'index.html', context)
 
 class ArticleListView(ListView):
     model = Article
@@ -69,14 +89,6 @@ class ArticleDetailView(DetailView):
         # Articles pour le sidebar
         context["articles_sidebar"] = Article.objects.exclude(pk=article.pk).order_by("-date_creation")[:5]
         return context
-    
-    def post(self, request, *args, **kwargs):
-            """
-            Gère l'envoi d'un commentaire.
-            """
-            if not request.user.is_authenticated:
-                messages.error(request, "Vous devez être connecté pour commenter.")
-                return redirect("login")
 
     def post(self, request, *args, **kwargs):
         article = self.get_object()
