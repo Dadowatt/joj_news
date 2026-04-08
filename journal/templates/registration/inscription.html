@@ -1,75 +1,70 @@
-{% load static %}
-{% load django_bootstrap5 %}
+  {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-    <!-- Bootstrap 5 & Google Fonts -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://googleapis.com" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-    .inscription{
-    font-family:fantasy;
-    /* From https://css.glass */
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    form label{
-    }
-}
-    </style>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body class="login">
 
+{% block content %}
  <div class="retour"> 
     <p class="register-retour my-3 mx-3">
         <a href="{% url 'home' %}" class="text-warning fs-6">← Retour à l'accueil</a>
     </p>
   </div>
-<form  method="POST" class="form-control inscription w-50 mt-3 mx-auto p-4 shadow">
+<div class="container">
+  <form method="POST" class="inscription w-50 mt-3 mx-auto p-4">
   {% csrf_token %}
-    <h2 class="text-center text-success">Inscription</h2>
+  <h2 class="text-center text-warning fw-bold">Inscription</h2>
 
-    <div class="form-group d-flex justify-content-between">
-      
-      <div class="mb-3">
-      {% bootstrap_field form.username show_help=False %}
-    </div>
+  <div class="d-flex justify-content-between">
+    <div class="mb-3">
+    <label for="{{ form.username.id_for_label }}" class="form-label text-light fw-bold">{{ form.username.label }}</label>
+    {{ form.username }}
+  </div>
 
-    <div class="mb-3">
-      {% bootstrap_field form.nom_complet %}
-    </div>
-    </div>
+  <div class="mb-3">
+    <label for="{{ form.nom_complet.id_for_label }}" class="form-label text-light fw-bold">{{ form.nom_complet.label }}</label>
+    {{ form.nom_complet }}
+  </div>
+  </div>
 
-    <div class="mb-3">
-    {% bootstrap_field form.email show_help=False %}
-    </div>
+  <div class="mb-3">
+    <label for="{{ form.email.id_for_label }}" class="form-label text-light fw-bold">{{ form.email.label }}</label>
+    {{ form.email }}
+  </div>
 
-    <div class="form-group mt-5 d-flex justify-content-between">
-      <div class="mb-3">
-    {% bootstrap_field form.password1 show_help=False %}
-    </div>
-    
+  <div class="d-flex justify-content-between">
     <div class="mb-3">
-    {% bootstrap_field form.password2 show_help=False %}
-    </div>
-    </div>
-    
-    <div class="mb-3 d-flex justify-content-between form-check">
-    <div><input type="checkbox" class="form-check-input" id="exampleCheck1">
-    <label for="">se souvenir de moi</label></div>
-        <a href="{% url 'connexion' %}">Connexion</a>
-    </div>
-    
-    <div class="mb-3">
-    <button type="submit" class="btn btn-success fw-bold w-100">S'inscrire</button>
-  </div>  
+    <label for="{{ form.password1.id_for_label }}" class="form-label text-light fw-bold">{{ form.password1.label }}</label>
+    {{ form.password1 }}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.password2.id_for_label }}" class="form-label text-light fw-bold">{{ form.password2.label }}</label>
+    {{ form.password2 }}
+  </div>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+    <label for="exampleCheck1" class="form-check-label">Se souvenir de moi</label>
+  </div>
+
+  <div class="mb-3">
+    <a href="{% url 'connexion' %}" class="text-warning fw-bold">Se Connecter</a>
+  </div>
+  </div>
+
+  <button type="submit" class="btn btn-success fw-bold w-100">S'inscrire</button>
 </form>
+</div>
+{% endblock %}
+</body>
+</html>

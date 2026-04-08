@@ -97,12 +97,11 @@
       <p class="text-muted">Aucun article disponible pour le moment.</p>
       {% endif %}
 
-      
     </div>
 
     {% comment %} sidebar {% endcomment %}
     <div class="col-lg-4">
-      <div class="sticky-top" style="top:20px;">
+      <div class="sticky-top z-0" style="top:20px;">
         {% comment %} RECHERCHE {% endcomment %}
         <h5 class="fw-bold mb-3 border-bottom pb-2">Rechercher un article</h5>
         <form method="get" action="{% url 'home' %}" class="mb-4">
