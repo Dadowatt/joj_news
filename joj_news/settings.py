@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'journal',
     'django_bootstrap5',
-    'django_cleanup',
+
 ]
 
 MIDDLEWARE = [
