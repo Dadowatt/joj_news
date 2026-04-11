@@ -14,32 +14,13 @@ class Inscription(CreateView):
     success_url = reverse_lazy('connexion')
     template_name = 'registration/inscription.html'
 
+
 class Connexion(LoginView):
     form_class = Connexion
     template_name = 'registration/connexion.html'
     redirect_authenticated_user = True
     success_url = reverse_lazy('home')
 
-def index(request):
-    # Récupérer tous les articles avec les relations nécessaires
-    articles = Article.objects.select_related("categorie", "auteur").all().order_by('-date_creation')
-
-    # Carrousel des 4 premiers articles
-    hero_articles = articles[:4]
-
-    # Grille principale pour les articles suivants
-    grid_articles = articles[4:9]
-
-    # Commentaires récents : les 5 derniers commentaires
-    commentaires = Commentaire.objects.select_related("auteur", "article").order_by('-date_creation')[:5]
-
-    context = {
-        'articles': articles,           
-        'hero_articles': hero_articles, 
-        'grid_articles': grid_articles, 
-        'commentaires': commentaires,   
-    }
-    return render(request, 'index.html', context)
 
 class ArticleListView(ListView):
     model = Article
@@ -61,16 +42,16 @@ class ArticleListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        articles = self.get_queryset()
+        articles = list(self.get_queryset())
 
+        #affiche les 6 article les plus recent
+        context["hero_articles"] = articles[:6]
+        context["grid_articles"] = context["object_list"]
+        # afichage des 4 dernier articles pour la sidebar
+        context["articles_sidebar"] = list(reversed(articles))[:4]
         context["query"] = self.request.GET.get("q")
-
-        context["hero_articles"] = articles[:4]
-        context["grid_articles"] = articles[5:9] if articles.count() > 4 else articles[:4]
-
-        # dernier articles pour la sidebar
-        context["articles_sidebar"] = articles[1:6]
         return context
+
 
 class ArticleDetailView(DetailView):
     model = Article
@@ -87,7 +68,7 @@ class ArticleDetailView(DetailView):
         context["form"] = form
 
         # Articles pour le sidebar
-        context["articles_sidebar"] = Article.objects.exclude(pk=article.pk).order_by("-date_creation")[:5]
+        context["articles_sidebar"] = Article.objects.exclude(pk=article.pk).order_by("-date_creation")[:4]
         return context
 
     def post(self, request, *args, **kwargs):
@@ -102,6 +83,7 @@ class ArticleDetailView(DetailView):
         context = self.get_context_data()
         context["form"] = form
         return self.render_to_response(context)
+
 
 class CommentaireUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Commentaire

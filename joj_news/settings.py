@@ -119,6 +119,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
+
+#dit à django que Le modèle utilisateur officiel du projet est Utilisateur dans l’app journal
 AUTH_USER_MODEL = 'journal.Utilisateur'
 
 STATIC_URL = 'static/'
