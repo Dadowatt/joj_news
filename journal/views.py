@@ -26,7 +26,7 @@ class ArticleListView(ListView):
     model = Article
     template_name = "index.html"
     context_object_name = "articles"
-    paginate_by = 10  
+    paginate_by = 4  
     
     def get_queryset(self):
         queryset = Article.objects.select_related("categorie", "auteur").all().order_by("-date_creation")
